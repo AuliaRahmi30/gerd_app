@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'host' => env('MQTT_HOST', 'broker.hivemq.com'),
+    'port' => env('MQTT_PORT', 1883),
+    'client_id' => env('MQTT_CLIENT_ID', 'gerd_app_' . uniqid()),
+    'username' => env('MQTT_USERNAME', null),
+    'password' => env('MQTT_PASSWORD', null),
+    'tls' => filter_var(env('MQTT_TLS', false), FILTER_VALIDATE_BOOLEAN),
+    'tls_verify_peer' => filter_var(env('MQTT_TLS_VERIFY_PEER', true), FILTER_VALIDATE_BOOLEAN),
+    'keepalive' => env('MQTT_KEEPALIVE', 10),
+    'socket_timeout' => env('MQTT_SOCKET_TIMEOUT', 30),
+    'resend_timeout' => env('MQTT_RESEND_TIMEOUT', 10),
+    'connect_timeout' => env('MQTT_CONNECT_TIMEOUT', 10),
+    'reconnect' => filter_var(env('MQTT_RECONNECT', false), FILTER_VALIDATE_BOOLEAN),
+    'max_reconnect_attempts' => env('MQTT_MAX_RECONNECT_ATTEMPTS', 3),
+    'reconnect_delay' => env('MQTT_RECONNECT_DELAY', 1000),
+    'device_topic' => env('MQTT_DEVICE_TOPIC', 'gerd/buzzer'),
+    'device_message' => env('MQTT_DEVICE_MESSAGE', 'ON'),
+    'device_schedule_topic' => env('MQTT_DEVICE_SCHEDULE_TOPIC', 'gerd/jadwal'),
+    'device_status_topic' => env('MQTT_DEVICE_STATUS_TOPIC', 'gerd/status'),
+    'device_status_timeout' => env('MQTT_DEVICE_STATUS_TIMEOUT', 120),
+    'device_stop_message' => env('MQTT_DEVICE_STOP_MESSAGE', 'OFF'),
+    'device_confirm_topic' => env('MQTT_DEVICE_CONFIRM_TOPIC', 'gerd/konfirmasi'),
+    'device_late_topic' => env('MQTT_DEVICE_LATE_TOPIC', 'gerd/late'),
+    'device_late_message' => env('MQTT_DEVICE_LATE_MESSAGE', 'LATE'),
+];
