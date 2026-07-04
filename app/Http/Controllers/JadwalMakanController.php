@@ -129,17 +129,31 @@ class JadwalMakanController extends Controller
         ]);
 
         // ============================================================
-        // 2. UPDATE LOG MAKAN (jika masih menunggu)
+        // 2. PERBARUI LOG MAKAN HARI INI ATAU BUAT BARU JIKA BELUM ADA
         // ============================================================
         $today = Carbon::now()->toDateString();
-        
-        LogMakan::where('jadwal_makan_id', $jadwalMakan->id)
+
+        $todayLog = LogMakan::where('jadwal_makan_id', $jadwalMakan->id)
             ->where('tanggal', $today)
-            ->whereIn('status', LogMakan::waitingStatuses())
-            ->update([
+            ->latest('id')
+            ->first();
+
+        if ($todayLog) {
+            $todayLog->update([
                 'jam' => $jadwalMakan->jam,
                 'jadwal' => $jadwalMakan->keterangan,
             ]);
+        } else {
+            LogMakan::create([
+                'user_id' => auth()->id(),
+                'jadwal_makan_id' => $jadwalMakan->id,
+                'tanggal' => $today,
+                'jam' => $jadwalMakan->jam,
+                'jadwal' => $jadwalMakan->keterangan,
+                'status' => LogMakan::STATUS_WAITING,
+                'konfirmasi' => null,
+            ]);
+        }
 
         // ============================================================
         // 3. KIRIM NOTIFIKASI TELEGRAM
