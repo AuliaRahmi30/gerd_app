@@ -73,6 +73,7 @@ class TelegramController extends Controller
                 $message .= "\n💡 <b>Perintah yang tersedia:</b>\n";
                 $message .= "/start - Lihat status akun\n";
                 $message .= "/jadwal - Lihat daftar jadwal\n";
+                $message .= "/log - Lihat log makan hari ini\n";
                 $message .= "/help - Bantuan\n";
 
             // ---------- /jadwal ----------
@@ -93,10 +94,28 @@ class TelegramController extends Controller
                 $message = "📖 <b>Panduan Penggunaan Bot GERDCare</b>\n\n";
                 $message .= "/start - Lihat status akun dan jadwal\n";
                 $message .= "/jadwal - Lihat daftar jadwal makan\n";
+                $message .= "/log - Lihat log makan hari ini\n";
                 $message .= "/help - Tampilkan panduan ini\n\n";
                 $message .= "🔔 Bot akan mengirimkan pengingat saat jadwal makan tiba.\n\n";
                 $message .= "Setelah menerima pengingat, konfirmasi utama tetap melalui tombol Push Button.\n";
                 $message .= "Telegram hanya digunakan untuk notifikasi pengingat dan status akun.";
+
+            // ---------- /log ----------
+            } elseif ($command === '/log') {
+                $logs = LogMakan::where('user_id', $user->id)
+                    ->where('tanggal', now()->toDateString())
+                    ->orderBy('jam')
+                    ->get();
+
+                if ($logs->isNotEmpty()) {
+                    $message = "📝 <b>Log Makan Hari Ini</b>\n\n";
+                    foreach ($logs as $log) {
+                        $message .= "• {$log->jam} - {$log->jadwal} - {$log->status_label} (via {$log->konfirmasi_label})\n";
+                    }
+                } else {
+                    $message = "⚠️ Belum ada log makan untuk hari ini.\n";
+                    $message .= "Silakan tunggu pengingat atau konfirmasi makan Anda.";
+                }
 
             // ---------- "sudah" ----------
             } elseif ($command === 'sudah') {
